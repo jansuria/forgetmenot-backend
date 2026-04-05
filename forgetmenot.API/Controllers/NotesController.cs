@@ -1,24 +1,51 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using forgetmenot.API.Data;
+using Microsoft.AspNetCore.Authorization;
+using forgetmenot.API.DTOs;
+using forgetmenot.API.Services;
+
 
 namespace forgetmenot.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class NotesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly NotesService _notesService;
 
-    public NotesController(AppDbContext context)
+    public NotesController(NotesService notesService)
     {
-        _context = context;
+        _notesService = notesService;
     }
 
-    [HttpGet("health")]
-    public async Task<IActionResult> Health()
+    [HttpGet]
+    public async Task<IActionResult> GetNotes()
     {
-        var count = await _context.Notes.CountAsync();
-        return Ok(new { status = "connected", noteCount = count });
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+
+        var notes = await _notesService.GetNotesAsync(userId);
+        return Ok(notes);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNote([FromBody] CreateNoteDto dto)
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+
+        var note = await _notesService.CreateNoteAsync(userId, dto);
+        return Ok(note);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteNote(long id)
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+
+        var deleted = await _notesService.DeleteNoteAsync(userId, id);
+        if (!deleted) return NotFound();
+        return NoContent();
     }
 }

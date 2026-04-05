@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("forgetmenot.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b4528ebbc9fe8881a9e3464cc4a267f55d5328b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb92d8a8b5e8da89ae4ac9c3414150f7f2d5985d")]
 [assembly: System.Reflection.AssemblyProductAttribute("forgetmenot.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("forgetmenot.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
