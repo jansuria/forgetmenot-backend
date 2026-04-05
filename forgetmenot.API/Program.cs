@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using forgetmenot.API.Data;
+using forgetmenot.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
 builder.Services.AddControllers();
 
-// CORS - allow Angular dev server
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -20,23 +19,30 @@ builder.Services.AddCors(options =>
     });
 });
 
-// JWT Authentication via Supabase
-var jwtSecret = builder.Configuration["Supabase:JwtSecret"];
+// JWT Authentication via Supabase JWKS
+var supabaseUrl = builder.Configuration["Supabase:Url"];
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.Authority = $"{supabaseUrl}/auth/v1";
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret!)),
-            ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateIssuer = true,
+            ValidIssuer = $"{supabaseUrl}/auth/v1",
+            ValidateAudience = true,
+            ValidAudience = "authenticated",
+            ValidateLifetime = true
         };
     });
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration["Supabase:ConnectionString"]));
+
+builder.Services.AddScoped<NotesService>();
 
 var app = builder.Build();
 
