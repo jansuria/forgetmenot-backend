@@ -45,6 +45,7 @@ public class NotesController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var deleted = await _notesService.DeleteNoteAsync(userId, id);
+        Console.WriteLine(deleted);
         if (!deleted) return NotFound();
         return NoContent();
     }
