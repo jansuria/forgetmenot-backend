@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using forgetmenot.API.Data;
 using forgetmenot.API.Services;
+using Anthropic.SDK;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration["Supabase:ConnectionString"]));
 
 builder.Services.AddScoped<NotesService>();
+builder.Services.AddSingleton(new AnthropicClient(builder.Configuration["Anthropic:ApiKey"]!));
+builder.Services.AddScoped<CommandDispatcherService>();
 
 var app = builder.Build();
 

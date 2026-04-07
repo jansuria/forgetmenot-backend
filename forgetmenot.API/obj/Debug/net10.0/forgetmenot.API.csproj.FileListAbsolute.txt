@@ -129,3 +129,6 @@
 /Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/obj/Debug/net10.0/forgetmenot.API.pdb
 /Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/obj/Debug/net10.0/forgetmenot.API.genruntimeconfig.cache
 /Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/obj/Debug/net10.0/ref/forgetmenot.API.dll
+/Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/bin/Debug/net10.0/Anthropic.SDK.dll
+/Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/bin/Debug/net10.0/Microsoft.Bcl.AsyncInterfaces.dll
+/Users/jansuria/Documents/Code/C#/forgetmenot-backend/forgetmenot.API/bin/Debug/net10.0/Microsoft.Extensions.AI.Abstractions.dll
