@@ -25,20 +25,23 @@ public class CommandsController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
+
+
         var command = await _dispatcher.DispatchAsync(request.Input);
 
-        return command.Function switch
+        if (command.Function == "createNote")
         {
-            "createNote" => Ok(await _notesService.CreateNoteAsync(
-                userId,
-                new CreateNoteDto { UserNote = command.Parameters["userNote"].ToString()! }
-            )),
-            "getNotes" => Ok(await _notesService.GetNotesAsync(userId)),
-            "deleteNote" => Ok(await _notesService.DeleteNoteAsync(
-                userId,
-                long.Parse(command.Parameters["id"].ToString()!)
-            )),
-            _ => BadRequest(new { message = "Could not understand command" })
-        };
+            var note = await _notesService.CreateNoteAsync(userId,
+                new CreateNoteDto { UserNote = command.Parameters["userNote"].ToString()! });
+            return Ok(new CommandResponseDto { Function = "createNote", Note = note });
+        }
+
+        if (command.Function == "getNotes")
+        {
+            var notes = await _notesService.GetNotesAsync(userId);
+            return Ok(new CommandResponseDto { Function = "getNotes", Notes = notes });
+        }
+
+        return BadRequest(new { message = "Could not understand command" });
     }
 }
